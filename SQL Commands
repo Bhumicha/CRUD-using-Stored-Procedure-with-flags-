@@ -1,0 +1,82 @@
+CREATE DATABASE Office
+
+CREATE TABLE tblEmployee(    
+    EmployeeId int IDENTITY(1,1) NOT NULL,    
+    Name varchar(20) NOT NULL,    
+    City varchar(20) NOT NULL,    
+    Department varchar(20) NOT NULL,    
+    Gender varchar(6) NOT NULL    
+)
+SELECT * FROM tblEmployee
+--
+CREATE PROCEDURE spAddEmployee     
+(    
+    @Name VARCHAR(20),     
+    @City VARCHAR(20),    
+    @Department VARCHAR(20),    
+    @Gender VARCHAR(6)    
+)    
+as     
+Begin     
+    Insert into tblEmployee (Name,City,Department, Gender)     
+    Values (@Name,@City,@Department, @Gender)     
+End
+
+exec spAddEmployee @Name='Bhumi',@City = 'BKT' ,@Department= 'IT', @Gender ='Female'
+--
+CREATE PROCEDURE spUpdateEmployee      
+(      
+   @EmpId INTEGER ,    
+   @Name VARCHAR(20),     
+   @City VARCHAR(20),    
+   @Department VARCHAR(20),    
+   @Gender VARCHAR(6)    
+)      
+as      
+begin      
+   Update tblEmployee       
+   set Name=@Name,      
+   City=@City,      
+   Department=@Department,    
+   Gender=@Gender      
+   where EmployeeId=@EmpId      
+End
+--
+CREATE PROCEDURE spDeleteEmployee     
+(      
+   @EmpId int      
+)      
+as       
+begin      
+   Delete from tblEmployee where EmployeeId=@EmpId      
+End
+
+
+-- STORED PRCEDURE USING FLAG
+CREATE PROCEDURE spGetAllEmployees    
+as    
+Begin    
+    select *    
+    from tblEmployee    
+End
+--
+CREATE PROCEDURE spforemployee @EmpId INTEGER=Null , @name varchar(20) = Null, @City varchar(20)=Null,@Department varchar(20)=Null, @Gender varchar(6) =Null, @flag varchar(50) = ''
+AS
+BEGIN
+	IF @flag = 'Insert'
+		BEGIN
+		Insert into tblEmployee (Name,City,Department, Gender) Values (@Name,@City,@Department, @Gender)
+		END
+	IF @flag = 'Select'
+		BEGIN
+		select * from tblEmployee
+		END
+	IF @flag = 'Update'
+		BEGIN
+		Update tblEmployee set Name=@Name, City=@City, Department=@Department,Gender=@Gender where EmployeeId=@EmpId      
+		END
+	IF @flag = 'Delete'
+		BEGIN
+		Delete from tblEmployee where EmployeeId=@EmpId  
+		END
+END
